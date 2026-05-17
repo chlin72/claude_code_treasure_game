@@ -3,8 +3,9 @@
   import react from '@vitejs/plugin-react-swc';
   import path from 'path';
 
-  const repo = process.env.GITHUB_REPOSITORY?.split('/')[1] || 'claude_code_treasure_game';
-  const base = `/${repo}/`;
+  const base = process.env.GITHUB_REPOSITORY
+    ? `/${process.env.GITHUB_REPOSITORY.split('/')[1]}/`
+    : '/';
 
   export default defineConfig({
     base,
