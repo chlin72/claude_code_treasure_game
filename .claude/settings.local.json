@@ -7,7 +7,16 @@
       "Bash(vercel *)",
       "Bash(git add *)",
       "Bash(git commit *)",
-      "Bash(git push *)"
+      "Bash(git push *)",
+      "Bash(gh auth *)",
+      "PowerShell(gh auth *)",
+      "PowerShell(git remote *)",
+      "PowerShell(winget list *)",
+      "PowerShell(npm run *)",
+      "PowerShell(git *)",
+      "PowerShell(npx gh-pages -d build --dotfiles 2>&1)",
+      "PowerShell(Get-Command *)",
+      "PowerShell(winget install *)"
     ]
   }
 }
