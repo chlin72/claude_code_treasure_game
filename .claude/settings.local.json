@@ -4,7 +4,10 @@
       "Bash(npm run *)",
       "Bash(start *)",
       "Bash(vercel login *)",
-      "Bash(vercel *)"
+      "Bash(vercel *)",
+      "Bash(git add *)",
+      "Bash(git commit *)",
+      "Bash(git push *)"
     ]
   }
 }
