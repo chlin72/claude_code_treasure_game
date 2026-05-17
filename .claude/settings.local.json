@@ -16,7 +16,9 @@
       "PowerShell(git *)",
       "PowerShell(npx gh-pages -d build --dotfiles 2>&1)",
       "PowerShell(Get-Command *)",
-      "PowerShell(winget install *)"
+      "PowerShell(winget install *)",
+      "WebFetch(domain:claudecodetreasuregame-initial-indol.vercel.app)",
+      "Bash(gh *)"
     ]
   }
 }

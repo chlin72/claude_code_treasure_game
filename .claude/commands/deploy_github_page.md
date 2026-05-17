@@ -1,56 +1,58 @@
 Automatically build and deploy the Interactive Treasure Box Game to GitHub Pages. Run every step below using tool calls — do not ask the user for manual input at any point.
 
-## Step 1 — Check GitHub CLI authentication
+## Step 1 — Check GitHub CLI is installed
+
+Run `gh --version` using the Bash tool.
+
+- If the command **fails** (gh not found), inform the user:
+  "GitHub CLI is not installed. Please install it from https://cli.github.com/, then re-run /deploy_github_page."
+  Stop execution here.
+- If installed, continue to Step 2 silently.
+
+## Step 2 — Check GitHub CLI authentication
 
 Run `gh auth status` using the Bash tool.
 
-- If the output shows the user is **not logged in** (exit code non-zero or error message), run:
+- If the output shows the user is **not logged in**, run:
   ```
   gh auth login --web
   ```
   Then inform the user: "Please complete the GitHub login in your browser, then re-run /deploy_github_page."
-  Stop execution here until the user re-runs the command after logging in.
+  Stop execution here.
+- If already logged in, continue to Step 3 silently.
 
-- If the user **is logged in**, continue to Step 2 silently.
-
-## Step 2 — Check if a remote GitHub repository exists
+## Step 3 — Check if a remote GitHub repository exists
 
 Run `git remote get-url origin` using the Bash tool.
 
-- If the command **fails** (no remote set), a new repo must be created:
-  1. Run `gh repo create` to create a new public repository. Use the current directory name as the repo name:
-     ```
-     gh repo create <repo-name> --public --source=. --remote=origin --push
-     ```
-     Replace `<repo-name>` with the actual folder name obtained from `basename $(pwd)`.
-  2. Inform the user: "Created new GitHub repository and set as origin."
+- If the command **fails** (no remote set), create a new public repository:
+  ```
+  gh repo create <repo-name> --public --source=. --remote=origin --push
+  ```
+  Replace `<repo-name>` with the actual folder name from `basename $(pwd)`.
+  Inform the user: "Created new GitHub repository and set as origin."
+- If the remote already exists, continue to Step 4 silently.
 
-- If the remote **already exists**, continue to Step 3 silently.
+## Step 4 — Detect the GitHub username and repo name
 
-## Step 3 — Detect the GitHub username and repo name
-
-Run the following using the Bash tool to extract the repo info:
+Run the following using the Bash tool:
 ```
 gh repo view --json nameWithOwner --jq '.nameWithOwner'
-```
-
-Store the result as `<owner>/<repo>` for use in Step 7.
-
-Also extract just the repo name with:
-```
 gh repo view --json name --jq '.name'
 ```
 
-## Step 4 — Update Vite base path for GitHub Pages
+Store `<owner>/<repo>` and `<repo>` for use in later steps.
 
-Read `vite.config.ts`. Check if the `base` option is already set to `'/<repo-name>/'`.
+## Step 5 — Run the production build with the correct base path
 
-- If **not set or different**, update `vite.config.ts` to add `base: '/<repo-name>/'` inside the `defineConfig({})` call, replacing `<repo-name>` with the actual repo name from Step 3.
-- If already correct, skip silently.
+Run `npm run build` with `GITHUB_REPOSITORY` set so Vite generates the correct `/<repo>/` base path for GitHub Pages:
 
-## Step 5 — Run the production build
+On Windows (PowerShell):
+```
+$env:GITHUB_REPOSITORY="<owner>/<repo>"; npm run build
+```
 
-Run `npm run build` using the Bash tool. If it fails, fix the error and retry before continuing.
+Replace `<owner>/<repo>` with the value from Step 4. If the build fails, fix the error and retry.
 
 ## Step 6 — Commit all pending changes
 
@@ -69,13 +71,12 @@ Run `git push origin main` using the Bash tool. If the push fails, report the er
 
 ## Step 8 — Deploy build/ to gh-pages branch
 
-Use the Bash tool to push the `build/` directory to the `gh-pages` branch:
-
+Run the following using the Bash tool:
 ```
 npx gh-pages -d build --dotfiles
 ```
 
-If `gh-pages` is not installed, it will be fetched via npx automatically.
+`gh-pages` will be fetched via npx automatically if not installed.
 
 ## Step 9 — Enable GitHub Pages (if not already enabled)
 
@@ -84,11 +85,9 @@ Run the following to configure GitHub Pages to serve from the `gh-pages` branch:
 gh api repos/<owner>/<repo>/pages --method POST --field source[branch]=gh-pages --field source[path]=/ 2>&1
 ```
 
-If the response contains "already enabled" or a 409 conflict error, skip silently — Pages is already configured.
+If the response contains a 409 conflict error or "already enabled", skip silently — Pages is already configured.
 
 ## Step 10 — Report the live URL
-
-The GitHub Pages URL follows this pattern: `https://<owner>.github.io/<repo>/`
 
 Display the result to the user in this format:
 
