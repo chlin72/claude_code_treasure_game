@@ -60,7 +60,7 @@ export default function App() {
       const updatedBoxes = prevBoxes.map(box => {
         if (box.id === boxId && !box.isOpen) {
           playSound(box.hasTreasure);
-          const newScore = box.hasTreasure ? score + 100 : score - 50;
+          const newScore = box.hasTreasure ? score + 150 : score - 50;
           setScore(newScore);
           return { ...box, isOpen: true };
         }
@@ -76,7 +76,7 @@ export default function App() {
           // Recompute finalScore locally — setScore is async so 'score' holds the pre-click value
           const openedBox = updatedBoxes.find(b => b.id === boxId);
           const finalScore = openedBox
-            ? (openedBox.hasTreasure ? score + 100 : score - 50)
+            ? (openedBox.hasTreasure ? score + 150 : score - 50)
             : score;
           saveScore(currentUser.username, finalScore);
           toast.success('Score saved to your history!');
@@ -135,7 +135,7 @@ export default function App() {
           Click on the treasure chests to discover what's inside!
         </p>
         <p className="text-amber-700 text-sm">
-          💰 Treasure: +$100 | 💀 Skeleton: -$50
+          💰 Treasure: +$150 | 💀 Skeleton: -$50
         </p>
       </div>
 
@@ -215,7 +215,7 @@ export default function App() {
                           : 'bg-red-100 text-red-800 border border-red-300'
                       }`}
                     >
-                      {box.hasTreasure ? '+$100' : '-$50'}
+                      {box.hasTreasure ? '+$150' : '-$50'}
                     </motion.div>
                   ) : (
                     <div className="text-amber-700 p-2">
