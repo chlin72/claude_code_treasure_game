@@ -1,29 +1,38 @@
-Deploy all current changes to Vercel by following these steps in order:
+Automatically build and deploy the Interactive Treasure Box Game to Vercel production. Run every step below using tool calls — do not ask the user for manual input at any point.
 
-## Step 1 — Check for changes
-Run `git status` to see what files have been modified, added, or deleted.
+## Step 1 — Verify and run the production build
 
-If there are no changes (clean working tree), tell the user "No changes to deploy." and stop.
+Run `npm run build` using the Bash tool. If it fails, fix the error and retry before continuing.
 
-## Step 2 — Show a diff summary
-Run `git diff --stat` to summarize what changed. Briefly tell the user what you see (e.g. "2 files changed: App.tsx and ScoreHistory.tsx").
+## Step 2 — Commit all pending changes
 
-## Step 3 — Stage all changes
-Run `git add .` to stage all modified and new files.
+Use the Bash tool to:
+1. Run `git status` to check for uncommitted changes.
+2. If there are changes, run:
+   ```
+   git add -A
+   git commit -m "Deploy: update build and source files"
+   ```
+3. If there is nothing to commit, skip silently.
 
-## Step 4 — Write a commit message
-Based on the diff summary, write a concise commit message that describes what changed (e.g. "Add score summary to My Scores dialog"). Do not use generic messages like "update files".
+## Step 3 — Push to GitHub
 
-## Step 5 — Commit
-Run git commit with the message you wrote.
+Run `git push` using the Bash tool. If the push fails, report the error to the user.
 
-## Step 6 — Push to GitHub
-Run `git push origin main`.
+## Step 4 — Deploy to Vercel
 
-## Step 7 — Deploy to Vercel
-Run `vercel --prod` to deploy the latest build to production.
+Run the following using the Bash tool:
+```
+vercel --prod --yes
+```
 
-If the `vercel` command is not found, tell the user to run `! npm install -g vercel` in the prompt and then run `/deploy_vercel` again.
+The `--yes` flag accepts all prompts automatically so no manual input is needed.
 
-## Step 8 — Report the result
-Tell the user the production URL returned by Vercel so they can open it immediately.
+## Step 5 — Report the live URL
+
+Parse the production URL from the Vercel output (the line starting with `▲ Production` or the aliased URL) and display it to the user in this format:
+
+```
+Deployment complete.
+Live URL: <url>
+```
